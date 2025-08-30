@@ -13,29 +13,29 @@ services:
     env_file:
       - .env
     restart: always
-  wordpress:
-    container_name: wordpress
-    build: ./requirements/wordpress/.
-    volumes:
-      - ./srcs/wordpress:/var/www/html
-    networks:
-      - inception
-    depends_on: 
-      - mariadb
-    env_file:
-      - .env
-    restart: always
-  nginx:
-    container_name: nginx
-    build: ./requirements/nginx/.
-    volumes:
-      - ./srcs/wordpress:/var/www/html
-    ports:
-      - "443:443"
-    networks:
-      - inception
-    depends_on:
-      - wordpress
-    env_file:
-      - .env
-    restart: always
+  # wordpress:
+  #   container_name: wordpress
+  #   build: ./requirements/wordpress/.
+  #   volumes:
+  #     - ./srcs/wordpress:/var/www/html
+  #   networks:
+  #     - inception
+  #   depends_on: 
+  #     - mariadb
+  #   env_file:
+  #     - .env
+  #   restart: always
+  # nginx:
+  #   container_name: nginx
+  #   build: ./requirements/nginx/.
+  #   volumes:
+  #     - ./srcs/wordpress:/var/www/html
+  #   ports:
+  #     - "443:443"
+  #   networks:
+  #     - inception
+  #   depends_on:
+  #     - wordpress
+  #   env_file:
+  #     - .env
+  #   restart: always
