@@ -20,7 +20,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	echo "Database not found, initializing"
 	mariadb-install-db --user=mysql --datadir='/var/lib/mysql'
 
-	/usr/bin/mariadbd-safe --user=mysql --datadir='/var/lib/mysql'
+	mysqld --user=mysql --datadir='/var/lib/mysql' --skip-networking=0 &
 	pid="$!" # last background process ID
 
 	until mysqladmin ping --silent; do
