@@ -1,11 +1,26 @@
 #!/bin/bash
 
-set -e # fail whole script if one step fails
+set -eu # fail whole script if one step fails
 
-: "${DB_NAME:?DB_NAME is not set}"
-: "${DB_USER:?DB_USER is not set}"
-: "${DB_PASSWORD:?DB_PASSWORD is not set}"
-: "${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD is not set}"
+if [ -z "${DB_NAME:-}" ]; then
+    echo "Error: DB_NAME is not set or empty"
+    exit 1
+fi
+
+if [ -z "${DB_USER:-}" ]; then
+    echo "Error: DB_USER is not set or empty"
+    exit 1
+fi
+
+if [ -z "${DB_PASSWORD:-}" ]; then
+    echo "Error: DB_PASSWORD is not set or empty"
+    exit 1
+fi
+
+if [ -z "${DB_ROOT_PASSWORD:-}" ]; then
+    echo "Error: DB_ROOT_PASSWORD is not set or empty"
+    exit 1
+fi
 
 mkdir -p /var/run/mysqld # if it doesn't exist or belongs to root, daemon fails
 chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
