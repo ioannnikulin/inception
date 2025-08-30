@@ -12,9 +12,9 @@ chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 	echo "Database not found, initializing"
-	mysqld --initialize-insecure --user=mysql
+	mariadb-install-db --user=mysql --datadir='/var/lib/mysql'
 
-	mysqld --skip-networking --socket=/var/run/mysqld/mysqld.sock &
+	/usr/bin/mariadbd-safe --user=mysql --datadir='/var/lib/mysql'
 	pid="$!" # last background process ID
 
 	until mysqladmin ping --silent; do
@@ -35,4 +35,4 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	wait "$pid"
 fi
 
-exec mysqld
+exec mysqld --user=mysql
