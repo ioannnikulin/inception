@@ -7,7 +7,7 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb/.
     volumes:
-      - mariadb:/var/lib/mysql
+      - ../storage/mariadb:/var/lib/mysql
     networks:
       - inception
     env_file:
