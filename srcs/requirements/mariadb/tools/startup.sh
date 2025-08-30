@@ -3,10 +3,14 @@
 set -eu # fail whole script if one step fails
 
 for var in DB_NAME DB_USER DB_PASSWORD DB_ROOT_PASSWORD; do
-  if [ -z "${!var:-}" ]; then
-    echo "Error: $var is not set or empty"
-    exit 1
-  fi
+  if [ -z "${!var+x}" ]; then
+		echo "Error: $var is not set"
+		exit 1
+	fi
+	if [ -z "${!var}" ]; then
+		echo "Error: $var is empty"
+		exit 1
+	fi
 done
 
 mkdir -p /var/run/mysqld # if it doesn't exist or belongs to root, daemon fails
@@ -34,7 +38,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 
 	# stop temporary server
 	kill "$pid"
-	wait "$pid"
+	wait "$pid" || true
 fi
 
 exec mysqld --user=mysql
