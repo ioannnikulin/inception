@@ -1,15 +1,15 @@
 #!/bin/bash
 
-set -e # fail whole script if one step fails
+set -eu # fail whole script if one step fails or if ny variable is not set (which is, no env file)
 
 mkdir -p /var/run/mysqld # if it doesn't exist or belongs to root, daemon fails
 chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 	echo "Database not found, initializing"
-	/usr/sbin/mysqld --initialize-insecure --user=mysql
+	mariadb-install-db --user=mysql --datadir='/var/lib/mysql'
 
-	mysqld --skip-networking --socket=/var/run/mysqld/mysqld.sock &
+	/usr/bin/mariadbd-safe --user=mysql --datadir='/var/lib/mysql'
 	pid="$!" # last background process ID
 
 	until mysqladmin ping --silent; do
@@ -30,4 +30,4 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	wait "$pid"
 fi
 
-exec /usr/sbin/mysqld
+exec mysqld --user=mysql

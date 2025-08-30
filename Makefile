@@ -12,4 +12,7 @@ stop:
 start:
 	$(COMPOSE) start
 
+maria:
+	$(COMPOSE) build mariadb
+
 all: up
