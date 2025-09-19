@@ -20,7 +20,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	echo "Database not found, initializing"
 	mariadb-install-db --user=mysql --datadir='/var/lib/mysql'
 
-	mysqld --user=mysql --datadir='/var/lib/mysql' --skip-networking --socket=/tmp/mysq.sock &
+	mysqld --user=mysql --datadir='/var/lib/mysql' --skip-networking &
 	pid="$!" # last background process ID
 
 	until mysqladmin ping --silent; do
@@ -28,12 +28,11 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	  sleep 1
 	done
 
-	mysql -u root --socket=/tmp/mysql.sock <<-EOSQL
+	mysql -u root <<-EOSQL
 	  CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
 	  CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 	  GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
-	  ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
-	  UPDATE mysql.user SET plugin='mysql_native_password' WHERE user='root' AND host='localhost';
+	  ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('${DB_ROOT_PASSWORD}');
 	  FLUSH PRIVILEGES;
 	EOSQL
 

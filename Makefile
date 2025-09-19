@@ -13,6 +13,9 @@ start:
 	$(COMPOSE) start
 
 maria:
-	$(COMPOSE) build mariadb
+	$(COMPOSE) build --no-cache mariadb
+
+inside_maria:
+	docker exec -it mariadb sh
 
 all: up
