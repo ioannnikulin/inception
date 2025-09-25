@@ -12,10 +12,10 @@ stop:
 start:
 	$(COMPOSE) start
 
-maria:
-	$(COMPOSE) build --no-cache mariadb
+wp:
+	$(COMPOSE) build --no-cache wordpress
 
-inside_maria:
-	docker exec -it mariadb sh
+inside_wp:
+	docker exec -it wordpress sh
 
 all: up

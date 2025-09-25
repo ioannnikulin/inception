@@ -2,7 +2,7 @@
 
 set -eu # fail whole script if one step fails
 
-for var in DB_NAME DB_USER DB_PASSWORD DB_ROOT_PASSWORD; do
+for var in DB_NAME DB_USERNAME DB_PASSWORD DB_ROOT_PASSWORD; do
   if [ -z "${!var+x}" ]; then
 		echo "Error: $var is not set"
 		exit 1
@@ -30,8 +30,8 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 
 	mysql -u root <<-EOSQL
 	  CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
-	  CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
-	  GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
+	  CREATE USER IF NOT EXISTS '${DB_USERNAME}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+	  GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USERNAME}'@'%';
 	  ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('${DB_ROOT_PASSWORD}');
 	  FLUSH PRIVILEGES;
 	EOSQL
