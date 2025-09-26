@@ -24,6 +24,12 @@ if ! command -v wp > /dev/null 2>&1; then
 	mv wp-cli.phar /usr/local/bin/wp
 fi
 
+echo "Waiting for MariaDB to be ready..."
+until wp db check -dbhost=mariadb --dbuser="$DB_USERNAME" --dbpassword="$DB_PASSWORD" --allow-root >/dev/null 2>&1; do
+	echo -n "."
+	sleep 2
+done
+
 if [ ! -f wp-config.php ]; then
 	echo "wp-config.php not found, creating..."
 	wp config create \
@@ -31,7 +37,9 @@ if [ ! -f wp-config.php ]; then
 	--dbuser=$DB_USERNAME \
 	--dbpass=$DB_PASSWORD \
 	--dbhost=mariadb \
-	--allow-root
+	--allow-root \
+	--skip-check \
+	--debug
 fi
 
 if ! wp core is-installed --allow-root; then

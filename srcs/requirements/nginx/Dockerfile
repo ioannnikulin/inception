@@ -1,6 +1,7 @@
 FROM debian:trixie
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
         nginx \
         openssl \
         gettext-base \
@@ -10,8 +11,8 @@ COPY ./conf/default.conf.template /etc/nginx/templates/default.conf.template
 
 RUN mkdir -p /etc/ssl/private
 
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY ./tools/startup.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/startup.sh
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["startup.sh"]
 CMD ["nginx", "-g", "daemon off;"]
