@@ -26,9 +26,7 @@ mv wp-cli.phar /usr/local/bin/wp
 
 wp core download --allow-root
 
-ls /
-
-mv /wp-config.php /var/www/html/wp-config.php
+cp /wp-config.php /var/www/html/wp-config.php
 
 sed -i -r "s/database_name/$DB_NAME/1" wp-config.php
 sed -i -r "s/database_user/$DB_USERNAME/1" wp-config.php
@@ -47,5 +45,7 @@ sed -i 's/listen = \/run\/php\/php8.4-fpm.sock/listen = 9000/g' /etc/php/8.4/fpm
 mkdir -p /run/php
 
 wp redis enable --allow-root
+
+echo "Starting php-fpm"
 
 /usr/sbin/php-fpm8.4 -F
