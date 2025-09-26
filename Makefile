@@ -26,4 +26,8 @@ inside_wp:
 inside_mariadb:
 	docker exec -it mariadb sh
 
+maximal_cleanup:
+	sudo rm -rf storage
+	docker system prune -a --volumes
+
 all: up
