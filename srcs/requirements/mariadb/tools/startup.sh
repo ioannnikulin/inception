@@ -36,6 +36,8 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	  FLUSH PRIVILEGES;
 	EOSQL
 
+	echo "!!!!!!!!!!!!!!!!!!!!!!!Database initialized"
+
 	# stop temporary server
 	kill "$pid"
 	wait "$pid" || true

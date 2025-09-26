@@ -12,10 +12,18 @@ stop:
 start:
 	$(COMPOSE) start
 
-wp:
+remaria: stop
+	sudo rm -rf storage/mariadb
+	$(COMPOSE) build --no-cache mariadb
+
+rewp: stop
+	sudo rm -rf storage/wordpress
 	$(COMPOSE) build --no-cache wordpress
 
 inside_wp:
 	docker exec -it wordpress sh
+
+inside_mariadb:
+	docker exec -it mariadb sh
 
 all: up
