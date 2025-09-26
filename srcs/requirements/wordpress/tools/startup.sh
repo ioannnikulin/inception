@@ -17,35 +17,54 @@ mkdir -p /var/www/html
 
 cd /var/www/html
 
-rm -rf *
+if ! command -v wp > /dev/null 2>&1; then
+	echo "WP-CLI could not be found, installing..."
+	curl -o wp-cli.phar https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar
+	chmod +x wp-cli.phar 
+	mv wp-cli.phar /usr/local/bin/wp
+fi
 
-curl -o wp-cli.phar https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar
-chmod +x wp-cli.phar 
+if [ ! -f wp-config.php ]; then
+	echo "wp-config.php not found, creating..."
+	wp config create \
+	--dbname=$DB_NAME \
+	--dbuser=$DB_USERNAME \
+	--dbpass=$DB_PASSWORD \
+	--dbhost=mariadb \
+	--allow-root
+fi
 
-mv wp-cli.phar /usr/local/bin/wp
+if ! wp core is-installed --allow-root; then
+	echo "WordPress not installed, installing..."
+    wp core install \
+        --url="$DOMAIN_NAME" \
+        --title="$WP_TITLE" \
+        --admin_user="$WP_ADMIN_USERNAME" \
+        --admin_password="$WP_ADMIN_PASSWORD" \
+        --admin_email="$WP_ADMIN_EMAIL" \
+        --skip-email \
+        --allow-root
+fi
 
-wp core download --allow-root
+if ! wp user get "$WP_USERNAME" --allow-root >/dev/null 2>&1; then
+	echo "User $WP_USERNAME does not exist, creating..."
+    wp user create "$WP_USERNAME" "$WP_EMAIL" --role=author --user_pass="$WP_PASSWORD" --allow-root
+fi
 
-cp /wp-config.php /var/www/html/wp-config.php
+if ! wp theme is-active astra --allow-root 2>/dev/null; then
+    wp theme install astra --activate --allow-root
+fi
 
-sed -i -r "s/database_name/$DB_NAME/1" wp-config.php
-sed -i -r "s/database_user/$DB_USERNAME/1" wp-config.php
-sed -i -r "s/database_password/$DB_PASSWORD/1" wp-config.php
+if ! wp plugin is-active redis-cache --allow-root 2>/dev/null; then
+	echo "Installing Redis plugin... hope you have a Redis container running. Nothing would break otherwise, but you'll get some spam logs."
+    wp plugin install redis-cache --activate --allow-root
+fi
 
-wp core install --url=$DOMAIN_NAME/ --title=$WP_TITLE --admin_user=$WP_ADMIN_USERNAME --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
-
-wp user create $WP_USERNAME $WP_EMAIL --role=author --user_pass=$WP_PASSWORD --allow-root
-
-wp theme install astra --activate --allow-root
-
-wp plugin install redis-cache --activate --allow-root
-
-sed -i 's/listen = \/run\/php\/php8.4-fpm.sock/listen = 9000/g' /etc/php/8.4/fpm/pool.d/www.conf
-
+sed -i 's|listen = /run/php/php8.4-fpm.sock|listen = 9000|' /etc/php/8.4/fpm/pool.d/www.conf
 mkdir -p /run/php
 
-wp redis enable --allow-root
+if wp plugin is-installed redis-cache --allow-root; then
+    wp redis enable --allow-root || true
+fi
 
-echo "Starting php-fpm"
-
-/usr/sbin/php-fpm8.4 -F
+exec "$@"

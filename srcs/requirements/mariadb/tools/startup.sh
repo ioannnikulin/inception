@@ -46,4 +46,4 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 	wait "$pid" || true
 fi
 
-exec mysqld --user=mysql
+exec "$@"
