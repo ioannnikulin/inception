@@ -24,8 +24,12 @@ if [ ! -f "$SSL_CERT" ] || [ ! -f "$SSL_KEY" ]; then
         -subj "/C=DE/L=Berlin/O=42Berlin/OU=student/CN=localhost"
 fi
 
+export DOMAIN_NAME SSL_CERT SSL_KEY # otherwise envsubst can't see ssl vars
+
 envsubst '$DOMAIN_NAME $SSL_CERT $SSL_KEY' \
     < /etc/nginx/templates/default.conf.template \
     > /etc/nginx/conf.d/default.conf
+
+echo "Starting nginx..."
 
 exec "$@"

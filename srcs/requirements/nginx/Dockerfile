@@ -5,8 +5,9 @@ RUN apt-get update \
         nginx \
         openssl \
         gettext-base \
+        curl \
     && rm -rf /var/lib/apt/lists/*
-
+#curl only for debug
 COPY ./conf/default.conf.template /etc/nginx/templates/default.conf.template
 
 RUN mkdir -p /etc/ssl/private

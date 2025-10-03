@@ -20,11 +20,18 @@ rewp: stop
 	sudo rm -rf storage/wordpress
 	$(COMPOSE) build --no-cache wordpress
 
+renginx: stop
+	sudo rm -rf storage/nginx
+	$(COMPOSE) build --no-cache nginx
+
 inside_wp:
 	docker exec -it wordpress sh
 
 inside_mariadb:
 	docker exec -it mariadb sh
+
+inside_nginx:
+	docker exec -it nginx sh
 
 maximal_cleanup: stop
 	sudo rm -rf storage
