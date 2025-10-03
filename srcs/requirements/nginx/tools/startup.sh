@@ -21,7 +21,7 @@ if [ ! -f "$SSL_CERT" ] || [ ! -f "$SSL_KEY" ]; then
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
         -keyout "$SSL_KEY" \
         -out "$SSL_CERT" \
-        -subj "/C=DE/L=Berlin/O=42Berlin/OU=student/CN=localhost"
+        -subj "/C=DE/L=Berlin/O=42Berlin/OU=student/CN=${DOMAIN_NAME}"
 fi
 
 export DOMAIN_NAME SSL_CERT SSL_KEY # otherwise envsubst can't see ssl vars
