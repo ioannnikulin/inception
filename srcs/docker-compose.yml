@@ -40,3 +40,38 @@ services:
     env_file:
       - .env
     restart: always
+  redis:
+    container_name: redis
+    build: ./requirements/bonus/redis/.
+    networks:
+      - inception
+    restart: always
+  cadvisor:
+    container_name: cadvisor
+    build: ./requirements/bonus/cadvisor/.
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - inception
+    restart: always
+  ftp:
+    container_name: ftp
+    build: ./requirements/bonus/ftp/.
+    ports:
+      - "20:20"
+      - "21:21"
+      - "30000-30009:30000-30009"
+    depends_on:
+      - wordpress
+    volumes:
+      - ../storage/wordpress:/home/${FTP_USERNAME}/ftp
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: always

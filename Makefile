@@ -24,14 +24,23 @@ renginx: stop
 	sudo rm -rf storage/nginx
 	$(COMPOSE) build --no-cache nginx
 
+recadvisor: stop
+	$(COMPOSE) build --no-cache cadvisor
+
+reftp: stop
+	$(COMPOSE) build --no-cache ftp
+
 inside_wp:
-	docker exec -it wordpress sh
+	docker exec -it wordpress bash
 
 inside_mariadb:
-	docker exec -it mariadb sh
+	docker exec -it mariadb bash
 
 inside_nginx:
-	docker exec -it nginx sh
+	docker exec -it nginx bash
+
+inside_ftp:
+	docker exec -it ftp sh
 
 maximal_cleanup: stop
 	sudo rm -rf storage
