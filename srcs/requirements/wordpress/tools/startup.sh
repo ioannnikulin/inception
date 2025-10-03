@@ -88,6 +88,16 @@ if wp plugin is-installed redis-cache --allow-root; then
     wp redis enable --allow-root || true
 fi
 
+if ! grep -q "WP_REDIS_HOST" wp-config.php; then
+    echo "Configuring Redis for WordPress..."
+    cat <<'EOF' >> wp-config.php
+
+/** Redis cache settings */
+define('WP_REDIS_HOST', getenv('REDIS_HOST') ?: 'redis');
+define('WP_REDIS_PORT', getenv('REDIS_PORT') ?: 6379);
+EOF
+fi
+
 chown -R www-data:www-data "$WP_ROOT"
 sed -i 's|listen = /run/php/php8.4-fpm.sock|listen = 9000|' /etc/php/8.4/fpm/pool.d/www.conf
 mkdir -p /run/php
