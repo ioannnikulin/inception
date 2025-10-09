@@ -1,8 +1,8 @@
 COMPOSE=@docker compose -f ./srcs/docker-compose.yml
 
 up:
-	sudo mkdir -p ../storage/wordpress
-	sudo chown -R 33:33 ../storage/wordpress
+	sudo mkdir -p /home/vboxpassword/data/wordpress
+	sudo chown -R 33:33 /home/vboxpassword/data/wordpress
 	$(COMPOSE) up -d
 
 down:
@@ -15,15 +15,15 @@ start:
 	$(COMPOSE) start
 
 remaria: stop
-	sudo rm -rf storage/mariadb
+	sudo rm -rf /home/vboxpassword/data/mariadb
 	$(COMPOSE) build --no-cache mariadb
 
 rewp: stop
-	sudo rm -rf storage/wordpress
+	sudo rm -rf /home/vboxpassword/data/wordpress
 	$(COMPOSE) build --no-cache wordpress
 
 renginx: stop
-	sudo rm -rf storage/nginx
+	sudo rm -rf /home/vboxpassword/data/nginx
 	$(COMPOSE) build --no-cache nginx
 
 recadvisor: stop
@@ -54,7 +54,7 @@ connect_ftp:
 	ftp 127.0.0.1
 
 maximal_cleanup: stop
-	sudo rm -rf storage
+	sudo rm -rf /home/vboxpassword/data
 	docker system prune -a --volumes -f
 
 all: up
