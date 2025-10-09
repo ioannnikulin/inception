@@ -32,6 +32,12 @@ recadvisor: stop
 reftp: stop
 	$(COMPOSE) build --no-cache ftp
 
+rewebsite: stop
+	$(COMPOSE) build --no-cache website
+
+readminer: stop
+	$(COMPOSE) build --no-cache adminer
+
 inside_wp:
 	docker exec -it wordpress bash
 

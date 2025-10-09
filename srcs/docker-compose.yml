@@ -75,3 +75,21 @@ services:
     env_file:
       - .env
     restart: always
+  adminer:
+    container_name: adminer
+    build: ./requirements/bonus/adminer/.
+    ports:
+      - "8082:80"
+    networks:
+      - inception
+    restart: always
+  website:
+    container_name: website
+    build: ./requirements/bonus/website/.
+    volumes:
+      - ../storage/website:/data
+    ports:
+      - "8083:8080"
+    networks:
+      - inception
+    restart: always
