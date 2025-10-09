@@ -53,6 +53,10 @@ inside_ftp:
 connect_ftp:
 	ftp 127.0.0.1
 
+custom_website:
+	docker build -t website ./srcs/requirements/bonus/website
+	docker run --rm -it website bash
+
 maximal_cleanup: stop
 	sudo rm -rf /home/vboxpassword/data
 	docker system prune -a --volumes -f
