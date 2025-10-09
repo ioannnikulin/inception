@@ -1,6 +1,8 @@
 COMPOSE=@docker compose -f ./srcs/docker-compose.yml
 
 up:
+	sudo mkdir -p ../storage/wordpress
+	sudo chown -R 33:33 ../storage/wordpress
 	$(COMPOSE) up -d
 
 down:
@@ -41,6 +43,9 @@ inside_nginx:
 
 inside_ftp:
 	docker exec -it ftp sh
+
+connect_ftp:
+	ftp 127.0.0.1
 
 maximal_cleanup: stop
 	sudo rm -rf storage

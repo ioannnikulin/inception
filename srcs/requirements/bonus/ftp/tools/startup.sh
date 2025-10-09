@@ -19,29 +19,31 @@ if ! id "$FTP_USERNAME" &>/dev/null; then
     echo "$FTP_USERNAME" > /etc/vsftpd.userlist
 fi
 
-mkdir -p /home/$FTP_USERNAME/ftp
-
-chown $FTP_USERNAME:$FTP_USERNAME /home/$FTP_USERNAME
-chown nobody:nogroup /home/$FTP_USERNAME/ftp
-chmod a-w /home/$FTP_USERNAME/ftp
-
-mkdir -p /home/$FTP_USERNAME/ftp/files
-chown $FTP_USERNAME:$FTP_USERNAME /home/$FTP_USERNAME/ftp/files
+chown -R www-data:$FTP_USERNAME /var/www/html
+chmod -R 755 /var/www/html
 
 cat > /etc/vsftpd.conf <<EOF
 listen=YES
 listen_ipv6=NO
-anonymous_enable=NO
 local_enable=YES
 write_enable=YES
-chroot_local_user=YES
+chroot_local_user=NO
 allow_writeable_chroot=YES
 pasv_enable=YES
 pasv_min_port=30000
-pasv_max_port=30010
+pasv_max_port=30009
+
+anonymous_enable=NO
 userlist_enable=YES
+userlist_deny=NO
 userlist_file=/etc/vsftpd.userlist
-local_root=/home/$FTP_USERNAME/ftp
+
+local_root=/var/www/html
+
+xferlog_file=/var/log/vsftpd.log
+xferlog_enable=YES
+log_ftp_protocol=YES
+dual_log_enable=YES
 EOF
 
 echo "Starting vsftpd..."

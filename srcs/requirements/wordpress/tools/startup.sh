@@ -73,11 +73,6 @@ if ! wp user get "$WP_USERNAME" --allow-root >/dev/null 2>&1; then
     wp user create "$WP_USERNAME" "$WP_EMAIL" --role=author --user_pass="$WP_PASSWORD" --allow-root
 fi
 
-if ! wp theme is-active astra --allow-root 2>/dev/null; then
-	echo "Installing Astra theme..."
-    wp theme install astra --activate --allow-root
-fi
-
 if ! wp plugin is-active redis-cache --allow-root 2>/dev/null; then
 	echo "Installing Redis plugin... hope you have a Redis container running. Nothing would break otherwise, but you'll get some spam logs."
     wp plugin install redis-cache --activate --allow-root

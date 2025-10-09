@@ -69,7 +69,7 @@ services:
     depends_on:
       - wordpress
     volumes:
-      - ../storage/wordpress:/home/${FTP_USERNAME}/ftp
+      - ../storage/wordpress:/var/www/html
     networks:
       - inception
     env_file:
