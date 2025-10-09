@@ -7,7 +7,7 @@ services:
     container_name: mariadb
     build: ./requirements/mariadb/.
     volumes:
-      - ../storage/mariadb:/var/lib/mysql
+      - /home/vboxuser/data/mariadb:/var/lib/mysql
     networks:
       - inception
     env_file:
@@ -17,7 +17,7 @@ services:
     container_name: wordpress
     build: ./requirements/wordpress/.
     volumes:
-      - ../storage/wordpress:/var/www/html
+      - /home/vboxuser/data/wordpress:/var/www/html
     networks:
       - inception
     depends_on: 
@@ -29,7 +29,7 @@ services:
     container_name: nginx
     build: ./requirements/nginx/.
     volumes:
-      - ../storage/wordpress:/var/www/html
+      - /home/vboxuser/data/wordpress:/var/www/html
     ports:
       - "80:80"
       - "443:443"
@@ -69,7 +69,7 @@ services:
     depends_on:
       - wordpress
     volumes:
-      - ../storage/wordpress:/var/www/html
+      - /home/vboxuser/data/wordpress:/var/www/html
     networks:
       - inception
     env_file:
@@ -87,7 +87,7 @@ services:
     container_name: website
     build: ./requirements/bonus/website/.
     volumes:
-      - ../storage/website:/data
+      - /home/vboxuser/data/website:/data
     ports:
       - "8083:8080"
     networks:
